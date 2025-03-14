@@ -3,179 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy 20th Birthday, Jihan Rizki!</title>
-    <!-- Tailwind CSS (untuk styling dasar, bisa dihapus) -->
+    <title>Happy Birthday, Jihan!</title>
+    <!-- Tailwind CSS (opsional, untuk styling dasar) -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- GSAP (untuk animasi yang lebih kompleks) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
      <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         body {
+            margin: 0;
+            overflow: hidden; /* Sangat penting */
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f5c6e8 0%, #e6b9d2 100%);
-            color: #333;
-            overflow: hidden; /* Sangat penting */
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            perspective: 1500px; /* Efek 3D yang lebih kuat */
+            min-height:100vh;
+        }
+        #canvas-container {
+            width: 100%;  /* Lebar sesuai viewport */
+            height: 100vh; /* Tinggi sesuai viewport */
         }
 
-        .book {
-            position: relative;
-            width: 400px; /* Lebar buku */
-            height: 600px; /* Tinggi buku */
-            transform-style: preserve-3d; /* Wajib untuk 3D */
-        }
-
-        .page {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d; /* Penting untuk setiap halaman */
-            backface-visibility: hidden; /* Sembunyikan belakang halaman */
-            border-radius: 5px;
-            overflow: hidden; /* Agar konten tidak keluar */
-            user-select: none; /* Cegah teks terpilih saat interaksi */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan halus */
-        }
-
-        /* Styling dasar halaman (bisa dimodifikasi) */
         .page-content {
-            padding: 30px;
+            /* Styling dasar konten halaman (akan ditimpa oleh Three.js) */
+            padding: 20px;
+            box-sizing: border-box;
+            color: white;
+            text-align:center;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            text-align: center;
-            background-color: #fff; /* Warna dasar halaman */
-            background-size: cover;
-            background-position: center;
-            position: relative; /*untuk hearts*/
-        }
-
-        /* Halaman depan (cover) */
-        .page:nth-child(1) {
-            background-image: url('path/to/your/cover-image.jpg'); /* Ganti dengan gambar cover! */
-            background-size: cover;
-            background-position: center;
-            z-index: 100; /* Cover selalu di depan */
-            transform: rotateY(0deg); /* Cover depan tidak diputar */
-            cursor: grab; /* Ubah kursor saat diarahkan ke cover */
 
         }
-        .page:nth-child(1) .page-content{
-             background-color: transparent!important; /*hilangkan bg putih, spy gambar cover terlihat*/
-        }
-
-        /* Halaman ganjil (kanan) */
-        .page:nth-child(odd):not(:first-child) {
-            background-color: #fef2f2; /* Warna halaman kanan */
-            transform-origin: left center; /* Titik putar di sisi kiri */
-            z-index: 99;
-              cursor: grab; /* Ubah kursor saat diarahkan ke cover */
-        }
-
-        /* Halaman genap (kiri) */
-        .page:nth-child(even) {
-            background-color: #fdf2f8; /* Warna halaman kiri */
-            transform-origin: right center; /* Titik putar di sisi kanan */
-            z-index: 98;
-
-        }
-
-
-        /* Styling konten (contoh, sesuaikan!) */
-        .page-content h1 {
-            font-size: 3rem;
+        .page-content h1{
+            font-size: 2.5rem;
             color: #e94d58;
             font-family: 'Brush Script MT', cursive;
-            margin-bottom: 1rem;
-        }
 
-        .page-content h2 {
-            font-size: 1.8rem;
+        }
+          .page-content h2{
+             font-size: 1.8rem;
             color: #6c757d;
-            margin-bottom: 1.5rem;
         }
-
-        .page-content p {
-            font-size: 1.1rem;
+            .page-content p{
+              font-size: 1rem;
             line-height: 1.6;
             margin-bottom: 1rem;
-        }
 
-        /* Tombol-tombol interaktif (contoh) */
-        .interactive-button {
-            background-color: #f48fb1;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-            margin-top:1rem;
         }
-        .hidden-content{
-            margin-top: 1rem;
-            padding: 1rem;
-            background-color: rgba(255, 182, 193, 0.3);
-            border-radius: 8px;
-        }
-        .hidden-content p{
-            font-style:italic;
-            margin-bottom:0.5rem;
-        }
-
-        .interactive-button:hover {
-            background-color: #f06292;
-        }
-
-          .hearts {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50; /* Di atas konten, tapi di bawah cover */
-        }
-
-        .heart {
-            position: absolute;
-            font-size: 1.5em; /* Ukuran hati */
-            color: #e94d58; /* Warna hati */
-            animation: floatHeart 6s ease-in-out infinite; /* Animasi melayang */
-             /* Animasinya random */
-        }
-
-        /* Keyframes untuk animasi melayang */
-        @keyframes floatHeart {
-            0% {
-                transform: translateY(0) translateX(0) rotate(0deg);
-                opacity: 1;
-            }
-            50% {
-                transform: translateY(-25px) translateX(15px) rotate(15deg);
-                opacity: 0.7;
-            }
-            100% {
-                transform: translateY(0) translateX(0) rotate(0deg);
-                opacity: 1;
-            }
-        }
-
-
         /* Popup (SAMA PERSIS) */
         .popup-overlay {
             position: fixed;
             z-index: 9999;
-           /* ... (style popup lainnya, sama persis) ... */
+
             top: 0;
             left: 0;
             width: 100%;
@@ -229,79 +109,13 @@
             color: #f48fb1;
             margin-bottom: 20px;
         }
-
     </style>
 </head>
 <body>
-    <div class="book" id="book">
-        <!-- Halaman 1 (Cover) -->
-        <div class="page">
-            <div class="page-content">
-                <!-- Konten cover (kosong, karena sudah di-handle oleh background-image) -->
 
-            </div>
-              <div class="hearts">
-                 <!-- Hati-hati akan dibuat dengan JavaScript -->
-            </div>
-        </div>
+    <div id="canvas-container"></div>
 
-        <!-- Halaman 2 (Kiri) -->
-        <div class="page">
-            <div class="page-content">
-               <h2>My Dearest Jihan,</h2>
-                <p>Di hari yang istimewa ini, aku ingin mengungkapkan betapa berartinya kamu dalam hidupku.  Kamu adalah cahaya yang menerangi setiap langkahku, senyum yang menghangatkan hatiku, dan cinta yang membuatku merasa utuh.</p>
-
-            </div>
-        </div>
-
-        <!-- Halaman 3 (Kanan) -->
-        <div class="page">
-             <div class="page-content">
-                <h1>Happy 20th Birthday!</h1>
-
-                <p>Selamat ulang tahun yang ke-20, sayangku!  Semoga di usia yang baru ini, semua impian dan cita-citamu tercapai.  Aku akan selalu ada di sampingmu, mendukungmu dalam setiap langkah.</p>
-                 <button class="interactive-button" id="button1">Klik Aku! 🥰</button>
-                <div class="hidden-content" id="content1">
-                    <p><i class="fas fa-heart"></i>  Kamu tahu?  Setiap detak jantungku hanya untukmu!</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Halaman 4 (Kiri) -->
-        <div class="page">
-           <div class="page-content">
-
-                <p>Aku ingat pertama kali kita bertemu... [tambahkan cerita singkat tentang pertemuan pertama kalian, atau momen spesial lainnya].  Sejak saat itu, aku tahu bahwa kamu adalah seseorang yang spesial.</p>
-
-            </div>
-
-        </div>
-
-        <!-- Halaman 5 (Kanan) -->
-       <div class="page">
-            <div class="page-content">
-                <p>Terima kasih telah menjadi pacar yang luar biasa, Jihan.  Terima kasih atas cinta, tawa, dan dukunganmu yang tak terhingga.  Aku sangat beruntung memilikimu.</p>
-                <button class="interactive-button" id="button2">Pencet Ini! 😉</button>
-                <div class="hidden-content" id="content2">
-
-                    <p><i class="fas fa-kiss-wink-heart"></i> Aku seperti es krim, meleleh terus kalau dekat kamu! 🍦😊</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Halaman 6 (Kiri, kosong) -->
-        <div class="page">
-            <div class="page-content">
-              <p>Aku mencintaimu lebih dari kata-kata yang bisa terucap. You are my everything, Jihan. Selalu dan selamanya. ❤️</p>
-                <p style="margin-top:2rem; font-size: 1.2rem; font-weight: bold;">[Your Name]</p>
-
-            </div>
-        </div>
-
-        <!-- ... Tambahkan lebih banyak halaman jika perlu ... -->
-    </div>
-
-      <div class="popup-overlay" id="popup">
+     <div class="popup-overlay" id="popup">
         <div class="popup-container animate__animated animate__zoomIn">
             <i class="popup-icon fas fa-music"></i>
             <h2 class="popup-title">Ada Kejutan Musik!</h2>
@@ -310,176 +124,107 @@
         </div>
     </div>
 
+    <!-- Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <!-- OrbitControls (untuk interaksi kamera, opsional) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- GSAP (untuk animasi, opsional tapi sangat membantu) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <script>
-         function createHearts() {
-            const heartsContainer = document.querySelector('.hearts'); // Sesuaikan selector
-            const numHearts = 40; // Jumlah hati
 
-            for (let i = 0; i < numHearts; i++) {
-                const heart = document.createElement('span');
-                heart.classList.add('heart');
-                heart.innerHTML = '❤'; // Hati
+        let scene, camera, renderer, book;
+        let currentPage = 0;
+        const pageTurnSpeed = 1.5; // Kecepatan animasi (sesuaikan)
+        const bookWidth = 3;
+        const bookHeight = 4;
+        const bookDepth = 0.3;
+        const pageWidth = bookWidth; //lebar 1 halaman = 1/2 lebar buku
+        const pageHeight = bookHeight;
+        let pageMaterials = []; // Array untuk menyimpan material setiap halaman
 
-                const x = Math.random() * 100;
-                const y = Math.random() * 100;
-                const delay = Math.random() * 5;
-                const duration = 6 + Math.random() * 4; // Durasi animasi
+        //Data Halaman (Content)
+        const pagesData = [
+            { //cover
+                image: 'path/to/cover-image.jpg', // GANTI!
+            },
+            {
+              htmlContent: `
+                    <h2>My Dearest Jihan,</h2>
+                    <p>Di hari yang istimewa ini, izinkan aku mengungkapkan perasaanku yang terdalam untukmu.  Kamu adalah anugerah terindah dalam hidupku, bintang yang selalu bersinar, dan cinta yang membuatku merasa lengkap.</p>
+                 `,
+            },
+            {
 
-                heart.style.left = `${x}vw`;
-                heart.style.top = `${y}vh`;
-                heart.style.animationDelay = `${delay}s`;
-                 heart.style.animationDuration = `${duration}s`;
+                htmlContent: `
+                    <h1>Happy 20th Birthday!</h1>
+                    <p>Selamat ulang tahun yang ke-20, sayang!  Semoga semua impian dan cita-citamu menjadi kenyataan. Aku akan selalu ada di sisimu, mendukungmu dalam setiap langkah yang kamu ambil.</p>
 
-                heartsContainer.appendChild(heart);
-            }
-        }
+                `,
+            },
+              {
 
-        function setupButtons(){
-            const buttons = document.querySelectorAll('.interactive-button');
-            const contents = document.querySelectorAll('.hidden-content');
+                htmlContent: `
 
-             buttons.forEach((button, index) => {
-                button.addEventListener('click', () => {
-                    contents.forEach(content => content.style.display = 'none');
-                    contents[index].style.display = 'block';
-                    contents[index].classList.add('animate__animated', 'animate__bounceIn');
-                });
-            });
-        }
+                    <p>Aku ingat saat pertama kali kita bertemu ... [tambahkan cerita singkat tentang pertemuan pertama, atau momen spesial lainnya]. Sejak saat itu, aku tahu ada sesuatu yang istimewa tentang dirimu.</p>
+                `,
+            },
+            {
+                htmlContent:`
+                <p>Jihan, terima kasih telah menjadi pacar yang luar biasa.  Terima kasih atas cinta, perhatian, dan tawamu yang selalu membuat hariku lebih berwarna.  Aku sangat beruntung memilikimu.</p>
+                `
+            },
+            {
+                 htmlContent:`
+                <p>Aku mencintaimu lebih dari yang bisa kuungkapkan dengan kata-kata.  You are my everything, Jihan. Selalu dan selamanya. ❤️</p>
+                 <p style="margin-top:2rem; font-size: 1.2rem; font-weight: bold;">[Your Name]</p>
+                `
+            },
 
+        ];
 
-        window.onload = () => {
-            createHearts();
-            setupButtons();
+        init();
+        animate();
 
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
 
-            const book = document.getElementById('book');
-            const pages = document.querySelectorAll('.page');
-            let currentPage = 0; // Halaman yang sedang aktif
-              let isDragging = false;
-            let startX = 0;
-            let currentX = 0;
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 5); // Posisi awal kamera
 
-
-            // Fungsi untuk membalik halaman
-            function turnPage(delta) {
-                // Batasi agar tidak keluar dari halaman yang ada
-                const newPage = Math.max(0, Math.min(currentPage + delta, pages.length - 1));
-
-                if (newPage === currentPage) return; // Jangan lakukan apa-apa jika halamannya sama
-
-                // Animasikan halaman yang relevan
-                if (delta > 0) { // Flip ke kanan
-                    if(currentPage === 0){ //jika di cover, flip cover dan page 2
-                        gsap.to(pages[currentPage], { rotationY: -180, zIndex: 1, duration: 1.2, ease: 'power2.inOut' });
-                        gsap.to(pages[currentPage+1], { rotationY: -180, zIndex: 2, duration: 1.2, ease: 'power2.inOut', delay:0.2 });
-                    }
-                    else{
-                        gsap.to(pages[currentPage], { rotationY: -180, zIndex: 1, duration: 1.2, ease: 'power2.inOut' }); //balik halaman aktif
-                    }
-
-
-                    if (newPage < pages.length) {
-                         gsap.set(pages[newPage], {zIndex:100}); //halaman baru ke z-index tinggi
-                         gsap.fromTo(pages[newPage], { rotationY: 180 }, { rotationY: 0, duration: 1.2, ease: 'power2.inOut', delay:0.2 }); //animasi buka halaman baru
-                    }
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha:true }); //alpha:true agar transparan
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0); // Background transparan
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
 
 
-                } else { // Flip ke kiri
-                    if(currentPage == 1){ //jika flip balik ke cover
-                        gsap.to(pages[0], { rotationY: 0, duration: 1.2, ease: 'power2.inOut',  }); //kembalikan cover
-                         gsap.to(pages[1], { rotationY: 0,  duration: 1.2, ease: 'power2.inOut' }); // kembalikan page 2
-                    }
-                    else{
-                        gsap.to(pages[currentPage], { rotationY: 0, duration: 1.2, ease: 'power2.inOut',  }); //balik halaman aktif ke default.
-                    }
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Cahaya ambient
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8); // Cahaya terarah
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+
+            // Create Book
+            createBook();
 
 
-                     if (newPage >= 0 ) {
-                        gsap.set(pages[newPage], {zIndex:100});// halaman baru ke z index tinggi
-                         gsap.fromTo(pages[newPage], { rotationY: -180 }, { rotationY: 0, zIndex:1, duration: 1.2, ease: 'power2.inOut',  }); //animasi buka halaman baru
-                    }
+            // Controls (opsional, untuk menggerakkan kamera dengan mouse)
+           // const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            // controls.enableDamping = true; // Efek "smooth" saat menggerakkan kamera
 
+            // Event listeners untuk interaksi
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            document.addEventListener('touchstart', onDocumentTouchStart, false); // Tambahkan untuk touch events
 
-                }
-
-
-                currentPage = newPage; // Update halaman aktif
-            }
-               // Event listener untuk interaksi mouse/touch
-            function startDrag(e) {
-                isDragging = true;
-                startX = e.pageX || e.touches[0].pageX;
-                book.style.cursor = 'grabbing'; // Ganti kursor
-                 pages.forEach(page => page.style.transition = 'none'); //matikan transisi css
-            }
-
-            function drag(e) {
-                if (!isDragging) return;
-
-                currentX = e.pageX || e.touches[0].pageX;
-                let diff = startX - currentX;
-
-                  // Hanya flip halaman ganjil, kecuali cover
-                if(currentPage !=0 && currentPage % 2 !== 0){
-                   gsap.to(pages[currentPage], {rotationY: -diff/4,  ease: 'power2.out' }); //efek drag
-                }
-                else if(currentPage == 0){ //drag cover
-                     gsap.to(pages[currentPage], {rotationY: -diff/4,  ease: 'power2.out' }); //efek drag cover
-                     gsap.to(pages[1], {rotationY: 180-diff/4,  ease: 'power2.out' });// page dibaliknya ikut
-                }
-
-            }
-
-            function endDrag(e) {
-                if (!isDragging) return;
-                isDragging = false;
-                book.style.cursor = 'grab';
-                 pages.forEach(page => page.style.transition = ''); //hidupkan kembali transisi css
-                let diff = startX - currentX;
-
-                 // Tentukan apakah flip atau kembali berdasarkan jarak drag
-                if (Math.abs(diff) > 80) { // Threshold, bisa disesuaikan
-                    if (diff > 0) {
-                        // Flip ke kanan (halaman berikutnya)
-                       turnPage(2);
-
-                    } else {
-                        // Flip ke kiri (halaman sebelumnya)
-
-                            turnPage(-2);
-
-
-                    }
-                } else {
-                     //drag terlalu kecil, balik ke posisi semula.
-                    if(currentPage!=0 && currentPage%2 !=0){ //halaman ganjil, kecuali cover.
-                        gsap.to(pages[currentPage], {rotationY: 0, duration:0.6, ease:'power2.inOut'});
-                    }
-                    else if (currentPage == 0){ //cover
-                         gsap.to(pages[0], {rotationY: 0, duration:0.6, ease:'power2.inOut'});
-                          gsap.to(pages[1], {rotationY: 180, duration:0.6, ease:'power2.inOut'});
-                    }
-                }
-            }
-
-            // Event listeners untuk mouse
-            book.addEventListener('mousedown', startDrag);
-            book.addEventListener('mousemove', drag);
-            book.addEventListener('mouseup', endDrag);
-            book.addEventListener('mouseleave', endDrag); // Penting!
-
-            // Event listeners untuk touch (mobile)
-            book.addEventListener('touchstart', startDrag);
-            book.addEventListener('touchmove', drag);
-            book.addEventListener('touchend', endDrag);
-
-
-
-            // --- Bagian Audio dan Popup (SAMA PERSIS) ---
-            const audio = new Audio('path/to/your/music.mp3'); // GANTI dengan path musikmu
+            //Audio dan popup
+             const audio = new Audio('path/to/your/music.mp3'); // GANTI dengan path musikmu
             audio.loop = true;
-            audio.volume = 0.5;
+              audio.volume = 0.5;
 
             const popup = document.getElementById('popup');
             const playButton = document.getElementById('playButton');
@@ -490,12 +235,252 @@
                 }).catch(error => {
                     console.error("Gagal memutar musik:", error);
                     alert("Maaf, ada masalah saat memutar musik. Coba muat ulang halaman.");
-                     popup.style.display = 'none'; //tetap sembunyikan popup
+                     popup.style.display = 'none';
                 });
             });
+                popup.style.display = 'flex'; // Tampilkan popup
+        }
 
-            popup.style.display = 'flex';
-        };
+
+        function createBook() {
+            const bookGeometry = new THREE.BoxGeometry(bookWidth, bookHeight, bookDepth);
+            const bookMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent:true, opacity:0 }); // Invisible
+            book = new THREE.Mesh(bookGeometry, bookMaterial);
+            scene.add(book);
+
+            // Buat halaman-halaman
+            createPages();
+        }
+
+
+        function createPages() {
+            // Buat material untuk setiap halaman
+            for (let i = 0; i < pagesData.length; i++) {
+                let material;
+
+                if (pagesData[i].image) {
+                    // Jika ada gambar, gunakan TextureLoader
+                    const texture = new THREE.TextureLoader().load(pagesData[i].image);
+                     texture.colorSpace = THREE.SRGBColorSpace; //tambahkan ini
+                    material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+
+                } else if (pagesData[i].htmlContent) {
+                   // Jika ada konten HTML, buat canvas dan gambar kontennya
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 512;  // Resolusi canvas (sesuaikan)
+                    canvas.height = 512;
+                    const ctx = canvas.getContext('2d');
+
+
+                    // Render konten HTML ke canvas (dengan trik foreignObject)
+                    const data = `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}">
+                                    <foreignObject width="100%" height="100%">
+                                        <div xmlns="http://www.w3.org/1999/xhtml" class="page-content">
+                                            ${pagesData[i].htmlContent}
+                                        </div>
+                                    </foreignObject>
+                                </svg>`;
+
+                    const DOMURL = window.URL || window.webkitURL || window;
+                    const img = new Image();
+                    const svg = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+                    const url = DOMURL.createObjectURL(svg);
+
+                    img.onload = function () {
+                        ctx.drawImage(img, 0, 0);
+                        DOMURL.revokeObjectURL(url);
+                        const texture = new THREE.CanvasTexture(canvas);
+                        texture.needsUpdate = true; // Penting!
+                         texture.colorSpace = THREE.SRGBColorSpace;
+                        material.map = texture; // Update tekstur material
+                        material.needsUpdate = true;
+                    };
+                    img.src = url;
+                    material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent:true }); //transparan dulu
+
+                }
+                pageMaterials.push(material);
+
+
+                // Buat geometri halaman
+                const pageGeometry = new THREE.PlaneGeometry(pageWidth, pageHeight);
+                const page = new THREE.Mesh(pageGeometry, material);
+
+                // Posisi dan rotasi halaman
+                if (i === 0) { // Cover depan
+                    page.position.set(0, 0, bookDepth / 2 + 0.01);
+                } else if (i % 2 !== 0) { // Halaman ganjil (kanan)
+                    page.position.set(pageWidth/2, 0, 0);
+                    page.rotation.y = -Math.PI; //hadap kiri dulu
+                    page.userData.originalRotation = -Math.PI; //simpan rotasi awal
+                     page.userData.pageNumber = i;
+                    book.add(page); // Tambahkan ke buku
+
+                } else { // Halaman genap (kiri)
+                    page.position.set(-pageWidth/2, 0, 0); //posisi di kiri buku
+                    page.userData.originalRotation = 0;//simpan rotasi awal
+                     page.userData.pageNumber = i;
+                    book.add(page);  // Tambahkan ke buku
+                }
+            }
+        }
+
+
+        function animate() {
+            requestAnimationFrame(animate);
+           // if (controls) controls.update(); // Jika menggunakan OrbitControls
+            renderer.render(scene, camera);
+        }
+
+        // Event handlers
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseDown(event) {
+             event.preventDefault();
+
+            const mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+             //include book, agar cover bisa di klik
+            const intersects = raycaster.intersectObjects([...book.children, book], true);
+
+
+            if (intersects.length > 0) {
+                let page = intersects[0].object; // Ambil objek yang di-klik
+
+                 if (page.userData.pageNumber === 0 && currentPage === 0) { //klik cover
+                     turnPage(1); // Buka buku (ke halaman 1)
+                }
+                //cek apakah yg diklik adalah halaman ganjil. dan pastikan bukan cover
+               else if (page.userData.pageNumber % 2 !== 0 && page.userData.pageNumber !=null ) {
+                    turnPage(1); //halaman ganjil:  flip ke kanan
+                }
+                else if(page.userData.pageNumber %2 == 0 && page.userData.pageNumber != null) {
+                    turnPage(-1); //halaman genap: flip ke kiri
+                }
+            }
+        }
+        function onDocumentTouchStart(event){ //mobile
+            //Cegah scrolling saat menyentuh buku
+            event.preventDefault();
+
+            const mouse = new THREE.Vector2();
+             //gunakan touches[0] krn hanya perlu 1 titik sentuh
+            mouse.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
+
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+             //include book, agar cover bisa di klik
+            const intersects = raycaster.intersectObjects([...book.children, book], true);
+
+
+            if (intersects.length > 0) {
+                let page = intersects[0].object;
+
+                if (page.userData.pageNumber === 0 && currentPage === 0) {
+                    turnPage(1);
+                }
+
+               else if (page.userData.pageNumber % 2 !== 0 && page.userData.pageNumber !=null ) {
+                    turnPage(1);
+                }
+                else if(page.userData.pageNumber %2 == 0 && page.userData.pageNumber != null) {
+                    turnPage(-1);
+                }
+            }
+        }
+
+        // Fungsi untuk membalik halaman
+        function turnPage(direction) {
+             let pageIndex;
+             let nextPageTurn = 0; //untuk transisi halaman selanjutnya
+
+            if (direction > 0) { // Flip ke kanan (buka halaman)
+                if (currentPage >= pagesData.length - 1 ) return; // Sudah di akhir buku
+
+                if(currentPage == 0){ //sedang di cover
+                     pageIndex = 1;
+                }
+                else{
+                    pageIndex = currentPage;
+                }
+                nextPageTurn = pageIndex+2;
+
+                //animasi flip halaman ganjil
+                gsap.to(book.children[pageIndex], {
+                    duration: pageTurnSpeed,
+                    rotationY: 0, // Putar 180 derajat
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                         //Setelah animasi, update z index, agar halaman yg terbuka ada di atas
+                        book.children[pageIndex].renderOrder = 0; //reset
+                        if(currentPage!=0)  book.children[pageIndex].rotation.y = 0; //setelah animasi, set ke 0 derajat (hadap kanan)
+                    }
+                });
+                 //animasi flip cover
+                if(currentPage == 0){ //jika di cover
+                    gsap.to(book.children[0], { //halaman cover (index 0), ikut di flip.
+                        duration: pageTurnSpeed,
+                        rotationY: -Math.PI, //180 derajat
+                         ease: 'power2.inOut',
+                         onComplete: ()=>{
+                             book.children[0].renderOrder = 0; //kembalikan z index cover
+                         }
+                    });
+                }
+                currentPage += 2;
+
+            }
+             else { // Flip ke kiri (tutup halaman)
+                if (currentPage <= 0) return; // Sudah di awal buku
+
+                if(currentPage == 1){ //dari halaman 1 kembali ke cover
+                    pageIndex = 1;
+                    nextPageTurn = 0;
+                }
+                else{
+                    pageIndex = currentPage;
+                    nextPageTurn = pageIndex -2;
+                }
+
+                //animasi flip halaman genap (kiri)
+                gsap.to(book.children[pageIndex], {
+                    duration: pageTurnSpeed,
+                    rotationY: -Math.PI,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        book.children[pageIndex].renderOrder = 0;
+                        if(currentPage!=1) book.children[pageIndex].rotation.y = book.children[pageIndex].userData.originalRotation; //kembalikan ke rotasi awal
+
+                    }
+                });
+
+                //jika kembali ke cover
+                if(currentPage == 1){
+                    gsap.to(book.children[0], { //animasi cover kembali
+                        duration: pageTurnSpeed,
+                        rotationY: 0,
+                        ease: 'power2.inOut',
+                        onComplete: ()=>{
+                              book.children[0].renderOrder = 100; //set z-index cover
+                        }
+                    });
+                }
+
+                currentPage -= 2; // Kurangi 2 karena setiap flip menggerakkan 2 halaman
+            }
+
+        }
+
 
     </script>
 </body>
