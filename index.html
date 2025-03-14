@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy 20th Birthday, Jihan Rizki!</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS (hanya untuk styling dasar, bisa dihapus jika mau) -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Animate.css CDN -->
+    <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <!-- Font Awesome CDN -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
@@ -16,64 +16,129 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f5c6e8 0%, #e6b9d2 100%);
             color: #333;
-            overflow-x: hidden;
+            overflow: hidden; /* Penting untuk efek buku */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            perspective: 1200px; /* Efek 3D */
         }
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            max-width: 800px;
-            width: 90%;
+        .book {
             position: relative;
-            overflow: hidden;
-            margin: 20px;
+            width: 350px;  /* Lebar buku */
+            height: 500px; /* Tinggi buku */
+            transition: transform 0.8s; /* Transisi untuk animasi flip */
+            transform-style: preserve-3d; /* Penting untuk 3D */
+
+        }
+        .book.flipped{
+            transform: rotateY(-180deg);
         }
 
-        h1 {
-            font-size: 3.5rem;
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow:hidden; /*agar konten didlm page tdk keluar2*/
+            backface-visibility: hidden;/*agar page belakang tdk terlihat saat dibalik*/
+        }
+
+        .front {
+            /* Styling halaman depan */
+            background-color: #f8e4eb; /* Warna cover depan */
+            z-index: 2; /* Halaman depan di atas */
+            transform: rotateY(0deg);
+        }
+
+        .back {
+            /* Styling halaman belakang */
+            background-color: #fae8ef;
+             /* Warna cover belakang */
+            transform: rotateY(180deg);/*putar balik halaman belakang*/
+        }
+
+
+        .content {
+            padding: 20px;
+            text-align: center;
+            width: 90%;
+        }
+          .content h1 {
+            font-size: 2.5rem;
             color: #e94d58;
             margin-bottom: 10px;
             font-family: 'Brush Script MT', cursive;
         }
 
-        h2 {
-            font-size: 2rem;
+        .content h2 {
+            font-size: 1.5rem;
             color: #6c757d;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
-        .message {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
+        .content p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
         }
 
+        .book-cover {
+            /* Styling cover depan (misalnya gambar atau pola) */
+            width: 100%;
+            height: 100%;
+            background-image: url('path/to/your/cover-image.jpg'); /* Ganti dengan gambar cover */
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+        }
+
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .controls button {
+            background-color: #f48fb1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 1rem;
+        }
+        .controls i{
+            margin-right:5px;
+        }
+
+        /* Hati-hati (sama seperti sebelumnya, tapi disesuaikan) */
         .hearts {
-            position: absolute;
+            position: absolute; /* Tetap absolute */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: -1;
+            z-index: 1; /* Di atas konten */
         }
 
         .heart {
             position: absolute;
-            font-size: 1.5em;
+            font-size: 1.2em; /* Ukuran hati */
             color: #e94d58;
             animation: floatHeart 5s ease-in-out infinite;
         }
 
         @keyframes floatHeart {
-            0% {
+            /* ... (animasi floatHeart, SAMA seperti sebelumnya) ... */
+              0% {
                 transform: translateY(0) translateX(0) rotate(0deg);
                 opacity: 1;
             }
@@ -87,55 +152,18 @@
             }
         }
 
-        .interactive-button {
-            background-color: #f48fb1;
-            color: white;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            margin: 10px;
-        }
-
-        .interactive-button:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transform: scale(1.05);
-        }
-
-        .interactive-button:active {
-            transform: scale(0.95);
-        }
-
-        .hidden-content {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background-color: rgba(255, 182, 193, 0.2);
-            border-radius: 10px;
-        }
-
-        .hidden-content p {
-            margin-bottom: 10px;
-            font-style: italic;
-        }
-
-        .hidden-content i {
-            margin-right: 6px;
-        }
-
-        .popup-overlay {
+        /* Popup (SAMA PERSIS seperti sebelumnya) */
+         .popup-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.5); /* Latar belakang semi-transparan */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 9999; /* Pastikan popup di atas segalanya */
         }
 
         .popup-container {
@@ -172,7 +200,7 @@
         }
 
         .popup-button:hover {
-            background-color: #f06292;
+            background-color: #f06292; /* Warna sedikit lebih gelap saat dihover */
         }
 
         .popup-icon {
@@ -183,36 +211,37 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hearts">
-            <!-- Hati-hati akan dibuat dengan JavaScript -->
+    <div class="book" id="book">
+        <div class="page front">
+            <div class="book-cover"></div>
+              <div class="hearts">
+                 <!-- Hati-hati akan dibuat dengan JavaScript -->
+            </div>
         </div>
+        <div class="page back">
+            <div class="content">
+                 <h1>Happy 20th Birthday, Jihan!</h1>
+                <h2>My Dearest Love</h2>
+                <p>Di hari spesial ini, aku ingin mengucapkan selamat ulang tahun yang ke-20 untukmu, sayangku Jihan. Kamu adalah bintang yang selalu bersinar di hidupku. Setiap hari bersamamu adalah petualangan yang penuh cinta dan kebahagiaan.</p>
+                <p>Aku sangat bersyukur memilikimu dalam hidupku. Kamu selalu ada untukku, mendengarkan semua ceritaku, dan membuatku tertawa. Kamu *sempurna*, dan aku mencintaimu lebih dari yang bisa diungkapkan kata-kata!</p>
+                <p>Semoga di usia barumu ini, semua impianmu menjadi kenyataan. Aku akan selalu ada di sini untuk mendukungmu, *selalu dan selamanya*.</p>
 
-        <h1 class="animate__animated animate__fadeInDown">Happy 20th Birthday,<br> Jihan Rizki!</h1>
-        <h2 class="animate__animated animate__fadeInUp">My Dearest Love</h2>
-
-        <div class="message animate__animated animate__zoomIn">
-            <p>Di hari spesial ini, aku ingin ngucapin selamat ulang tahun yang ke-20 untuk kamu, sayangku Jihan.  Kamu itu bagaikan bintang yang selalu bersinar di hidupku.  Setiap hari bersamamu adalah petualangan yang penuh cinta dan kebahagiaan.</p>
-            <p>Aku bersyukur banget punya kamu di hidupku. Kamu selalu ada buat aku, dengerin semua ceritaku, dan bikin aku ketawa. Kamu itu *perfect*, and I love you more than words can say!</p>
-            <p>Semoga di usia yang baru ini, semua impian kamu jadi kenyataan, ya. Aku akan selalu ada di sini untuk mendukungmu, *always and forever*.</p>
-        </div>
-
-        <button class="interactive-button" id="button1">Klik Aku! 🥰</button>
-        <button class="interactive-button" id="button2">Pencet Ini Juga! 😉</button>
-        <button class="interactive-button" id="button3">Yang Ini Jangan Lupa! 😘</button>
-
-        <div class="hidden-content" id="content1">
-            <p><i class="fas fa-heart"></i> Kamu tahu gak?  Setiap detak jantungku itu cuma buat kamu, lho!.</p>
-        </div>
-        <div class="hidden-content" id="content2">
-            <p><i class="fas fa-kiss-wink-heart"></i>  Aku tuh kayak es krim, meleleh terus kalau deket kamu! 🍦😊.</p>
-        </div>
-        <div class="hidden-content" id="content3">
-            <p><i class="fas fa-gift"></i>  Hadiah terindah dalam hidupku?  Itu *kamu*, Jihan! ❤️🎁</p>
+                <!-- Tombol-tombol interaktif (bisa ditambahkan di sini atau di halaman lain) -->
+                 <button class="interactive-button mt-4" id="button1">Klik Aku! 🥰</button>
+                <button class="interactive-button" id="button2">Pencet Ini! 😉</button>
+                <div class="hidden-content" id="content1">
+                    <p><i class="fas fa-heart"></i> Kamu tahu? Setiap detak jantungku hanya untukmu!</p>
+                </div>
+                <div class="hidden-content" id="content2">
+                    <p><i class="fas fa-kiss-wink-heart"></i> Aku seperti es krim, meleleh terus kalau dekat kamu! 🍦😊</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Popup untuk izin putar musik -->
+    <div class="controls">
+        <button id="flip-button"><i class="fas fa-book-open"></i> Buka/Tutup Buku</button>
+    </div>
     <div class="popup-overlay" id="popup">
         <div class="popup-container animate__animated animate__zoomIn">
             <i class="popup-icon fas fa-music"></i>
@@ -223,15 +252,16 @@
     </div>
 
     <script>
-        function createHearts() {
-            const heartsContainer = document.querySelector('.hearts');
-            const numHearts = 50;
+       function createHearts() {
+            const heartsContainer = document.querySelector('.hearts'); //perhatikan selectornya
+            const numHearts = 30; // Jumlah hati, bisa disesuaikan
 
             for (let i = 0; i < numHearts; i++) {
                 const heart = document.createElement('span');
                 heart.classList.add('heart');
-                heart.innerHTML = '❤';
+                heart.innerHTML = '❤'; // Karakter hati
 
+                // Posisi dan animasi random (tetap sama)
                 const x = Math.random() * 100;
                 const y = Math.random() * 100;
                 const delay = Math.random() * 5;
@@ -245,8 +275,7 @@
                 heartsContainer.appendChild(heart);
             }
         }
-
-        function setupButtons() {
+      function setupButtons() {
             const buttons = document.querySelectorAll('.interactive-button');
             const contents = document.querySelectorAll('.hidden-content');
 
@@ -254,7 +283,7 @@
                 button.addEventListener('click', () => {
                     contents.forEach(content => content.style.display = 'none');
                     contents[index].style.display = 'block';
-                    contents[index].classList.add('animate__animated', 'animate__bounceIn');
+                     contents[index].classList.add('animate__animated', 'animate__bounceIn');
                 });
             });
         }
@@ -263,9 +292,18 @@
             createHearts();
             setupButtons();
 
-            const audio = new Audio('hbd.mpeg'); // GANTI dengan path musikmu
+            const book = document.getElementById('book');
+            const flipButton = document.getElementById('flip-button');
+            let isFlipped = false; // Status buku (terbuka atau tertutup)
+
+            flipButton.addEventListener('click', () => {
+                 book.classList.toggle('flipped');
+            });
+
+
+              const audio = new Audio('path/to/your/music.mp3'); // GANTI dengan path musikmu
             audio.loop = true;
-            audio.volume = 0.5;
+              audio.volume = 0.5;
 
             const popup = document.getElementById('popup');
             const playButton = document.getElementById('playButton');
